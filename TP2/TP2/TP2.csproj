@@ -35,10 +35,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DVAlgorithm.cs" />
+    <Compile Include="Graph.cs" />
     <Compile Include="Link.cs" />
+    <Compile Include="LSAlgorithm.cs" />
     <Compile Include="ModeEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Router.cs" />
+    <Compile Include="RoutingTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

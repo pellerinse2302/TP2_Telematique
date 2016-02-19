@@ -39,14 +39,14 @@ namespace TP2
       Router RouterE = new Router();
       Router RouterF = new Router();
 
-      Link linkAB = new Link(RouterA, RouterB, 5);
-      Link linkAD = new Link(RouterA, RouterD, 45);
-      Link linkBC = new Link(RouterB, RouterC, 70);
-      Link linkBE = new Link(RouterB, RouterE, 3);
-      Link linkDC = new Link(RouterD, RouterC, 50);
-      Link linkDE = new Link(RouterD, RouterE, 8);
-      Link linkCF = new Link(RouterC, RouterF, 78);
-      Link linkEF = new Link(RouterE, RouterF, 7);
+      Link linkAB = new Link(RouterA, 50001, RouterB, 50002, 5);
+      Link linkAD = new Link(RouterA, 51001, RouterD, 51002, 45);
+      Link linkBC = new Link(RouterB, 52001, RouterC, 52002, 70);
+      Link linkBE = new Link(RouterB, 53001, RouterE, 53002, 3);
+      Link linkDC = new Link(RouterD, 54001, RouterC, 54002, 50);
+      Link linkDE = new Link(RouterD, 55001, RouterE, 55002, 8);
+      Link linkCF = new Link(RouterC, 56001, RouterF, 56002, 78);
+      Link linkEF = new Link(RouterE, 57001, RouterF, 57002, 7);
 
       RouterA.NeighboursLink = new List<Link>() { linkAB, linkAD };
       RouterB.NeighboursLink = new List<Link>() { linkAB, linkBE, linkBC };
@@ -54,6 +54,8 @@ namespace TP2
       RouterD.NeighboursLink = new List<Link>() { linkAD, linkDC, linkDE };
       RouterE.NeighboursLink = new List<Link>() { linkDE, linkBE, linkEF };
       RouterF.NeighboursLink = new List<Link>() { linkCF, linkEF };
+
+      RouterA.UpdateNeighborhood();
 
       Console.ReadLine();
     }

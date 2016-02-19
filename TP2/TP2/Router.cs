@@ -19,30 +19,37 @@ namespace TP2
     public RoutingTable RoutTable { get; set; }
     public Graph RouterGraph { get; set; }
     public IPAddress Gateway { get; set; }
-    public int Port { get; set; }
     #endregion
 
     #region Constructeur
     public Router()
     {
       this.Gateway = IPAddress.Parse("127.0.0.1");
-      var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
     #endregion
 
     #region Méthodes publiques
     /// <summary>
+    /// Permet de récupérer le # de port du router associé à un lien
+    /// </summary>
+    /// <param name="link"></param>
+    /// <returns></returns>
+    public int GetPort(Link link)
+    {
+      return NeighboursLink.First(x => x == link).ListRouter.First(x => x.Key == this).Value;
+    }
+    /// <summary>
     /// Permet d'envoyer son graph aux routeurs voisins
     /// </summary>
     public void UpdateNeighborhood()
     {
-      while (!RouterGraph.IsUpdated)
-      {
+      //while (!RouterGraph.IsUpdated)
+      //{
         foreach (Link link in NeighboursLink)
         {
-          SendGraphTo(link.ListRouter.First(x => x != this));
+          SendGraphTo(link.ListRouter.First(x => x.Key != this).Key, link);
         }
-      }
+      //}
     }
     #endregion
 
@@ -51,13 +58,54 @@ namespace TP2
     /// Permet d'envoyer le graph à un router specifique
     /// </summary>
     /// <param name="router"></param>
-    private void SendGraphTo(Router router)
+    private void SendGraphTo(Router destRouter, Link link)
     {
       //TODO
       //Dans la réception du graph il faut comparer les graph et si ils sont identiques
       //on met le graph.isupdated a true, sinon à false
       //Lorsque tous les graphs seront updated, ça veut dire que tous les routers ont le mm graph
+      string str = "Hello world!";
+      try
+      {
+        //var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        //socket.Connect(destRouter.Gateway, destRouter.GetPort(link));
+        //socket.Send(Encoding.UTF8.GetBytes(str), 0, str.Length, SocketFlags.None);
 
+        TcpClient client = new TcpClient(destRouter.Gateway.ToString(), destRouter.GetPort(link));
+        // Translate the passed message into ASCII and store it as a Byte array.
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
+
+        // Get a client stream for reading and writing.
+        //  Stream stream = client.GetStream();
+
+        NetworkStream stream = client.GetStream();
+
+        // Send the message to the connected TcpServer. 
+        stream.Write(data, 0, data.Length);
+
+        Console.WriteLine("Sent: {0}", str);
+
+        // Receive the TcpServer.response.
+
+        // Buffer to store the response bytes.
+        data = new Byte[256];
+
+        // String to store the response ASCII representation.
+        String responseData = String.Empty;
+
+        // Read the first batch of the TcpServer response bytes.
+        Int32 bytes = stream.Read(data, 0, data.Length);
+        responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+        Console.WriteLine("Received: {0}", responseData);
+
+        // Close everything.
+        stream.Close();
+        client.Close();    
+      }
+      catch (Exception ex) 
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
     #endregion
   }

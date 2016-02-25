@@ -19,12 +19,14 @@ namespace TP2
     public RoutingTable RoutTable { get; set; }
     public Graph RouterGraph { get; set; }
     public IPAddress Gateway { get; set; }
+    public string RouterName { get; set; }
     #endregion
 
     #region Constructeur
-    public Router()
+    public Router(string name = null)
     {
       this.Gateway = IPAddress.Parse("127.0.0.1");
+      this.RouterName = name;
     }
     #endregion
 

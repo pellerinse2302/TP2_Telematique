@@ -32,12 +32,12 @@ namespace TP2
       }
 
 
-      Router RouterA = new Router();
-      Router RouterB = new Router();
-      Router RouterC = new Router();
-      Router RouterD = new Router();
-      Router RouterE = new Router();
-      Router RouterF = new Router();
+      Router RouterA = new Router("RouterA");
+      Router RouterB = new Router("RouterB");
+      Router RouterC = new Router("RouterC");
+      Router RouterD = new Router("RouterD");
+      Router RouterE = new Router("RouterE");
+      Router RouterF = new Router("RouterF");
 
       Link linkAB = new Link(RouterA, 50001, RouterB, 50002, 5);
       Link linkAD = new Link(RouterA, 51001, RouterD, 51002, 45);

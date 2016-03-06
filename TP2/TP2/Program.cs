@@ -55,21 +55,26 @@ namespace TP2
       RouterE.NeighboursLink = new List<Link>() { linkDE, linkBE, linkEF };
       RouterF.NeighboursLink = new List<Link>() { linkCF, linkEF };
 
-      Thread routerA = new Thread(RouterA.start);
-      Thread routerB = new Thread(RouterB.start);
-      Thread routerC = new Thread(RouterC.start);
-      Thread routerD = new Thread(RouterD.start);
-      Thread routerE = new Thread(RouterE.start);
-      Thread routerF = new Thread(RouterF.start);
+      Thread ThreadRouterA = new Thread(RouterA.StartListening);
+      Thread ThreadRouterB = new Thread(RouterB.StartListening);
+      Thread ThreadRouterC = new Thread(RouterC.StartListening);
+      Thread ThreadRouterD = new Thread(RouterD.StartListening);
+      Thread ThreadRouterE = new Thread(RouterE.StartListening);
+      Thread ThreadRouterF = new Thread(RouterF.StartListening);
 
-      routerA.Start();
-      routerB.Start();
-      routerC.Start();
-      routerD.Start();
-      routerE.Start();
-      routerF.Start();
+      ThreadRouterA.Start();
+      ThreadRouterB.Start();
+      ThreadRouterC.Start();
+      ThreadRouterD.Start();
+      ThreadRouterE.Start();
+      ThreadRouterF.Start();
 
       RouterA.UpdateNeighborhood();
+      RouterB.UpdateNeighborhood();
+      RouterC.UpdateNeighborhood();
+      RouterD.UpdateNeighborhood();
+      RouterE.UpdateNeighborhood();
+      RouterF.UpdateNeighborhood();
 
       Console.ReadLine();
     }

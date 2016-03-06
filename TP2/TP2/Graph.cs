@@ -18,7 +18,7 @@ namespace TP2
     /// </summary>
     public Graph()
     {
-
+      this.IsUpdated = false;
     }
     #endregion
 

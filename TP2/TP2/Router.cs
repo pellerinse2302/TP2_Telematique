@@ -20,13 +20,16 @@ namespace TP2
     public Graph RouterGraph { get; set; }
     public IPAddress Gateway { get; set; }
     public string RouterName { get; set; }
+    public int portNumber { get; set; }
     #endregion
 
     #region Constructeur
-    public Router(string name = null)
+    public Router(string name = null, int port = 0)
     {
+      this.RouterGraph = new Graph();
       this.Gateway = IPAddress.Parse("127.0.0.1");
       this.RouterName = name;
+      this.portNumber = port;
     }
     #endregion
 
@@ -36,10 +39,10 @@ namespace TP2
     /// </summary>
     /// <param name="link"></param>
     /// <returns></returns>
-    public int GetPort(Link link)
+    /*public int GetPort(Link link)
     {
       return NeighboursLink.First(x => x == link).ListRouter.First(x => x.Key == this).Value;
-    }
+    }*/
     /// <summary>
     /// Permet d'envoyer son graph aux routeurs voisins
     /// </summary>
@@ -47,10 +50,10 @@ namespace TP2
     {
       //while (!RouterGraph.IsUpdated)
       //{
-        foreach (Link link in NeighboursLink)
-        {
-          SendGraphTo(link.ListRouter.First(x => x.Key != this).Key, link);
-        }
+      foreach (Link link in NeighboursLink)
+      {
+        SendGraphTo(link.ListRouter.First(x => x.Key != this).Key, link);
+      }
       //}
     }
     #endregion
@@ -73,7 +76,7 @@ namespace TP2
         //socket.Connect(destRouter.Gateway, destRouter.GetPort(link));
         //socket.Send(Encoding.UTF8.GetBytes(str), 0, str.Length, SocketFlags.None);
 
-        TcpClient client = new TcpClient(destRouter.Gateway.ToString(), destRouter.GetPort(link));
+        TcpClient client = new TcpClient(destRouter.Gateway.ToString(), destRouter.portNumber);
         // Translate the passed message into ASCII and store it as a Byte array.
         Byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
 
@@ -102,13 +105,50 @@ namespace TP2
 
         // Close everything.
         stream.Close();
-        client.Close();    
+        client.Close();
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
       }
     }
+
+    /// <summary>
+    /// Démarre un thread pour listen sur le port du router.
+    /// </summary>
+    public void start()
+    {
+      TcpListener server = null;
+
+      try
+      {
+        server = new TcpListener(this.Gateway, this.portNumber);
+        server.Server.ReceiveTimeout = 10000;
+        server.Start();
+
+        while (!RouterGraph.IsUpdated)
+        {
+          TcpClient client = server.AcceptTcpClient();
+        }
+      }
+      catch (SocketException e)
+      {
+        //Devrait se rendre ici s'il timeout.
+        Console.WriteLine("Le {0} est à jour ", this.RouterName);
+
+        while (true)
+        {
+          server.Server.ReceiveTimeout = 0;
+          TcpClient client = server.AcceptTcpClient();
+        }
+      }
+      finally
+      {
+        // Stop listening for new clients.
+        server.Stop();
+      }
+    }
     #endregion
+
   }
 }

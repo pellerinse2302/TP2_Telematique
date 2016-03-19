@@ -52,7 +52,7 @@ namespace TP2
       //{
       foreach (Link link in NeighboursLink)
       {
-        SendGraphTo(link.ListRouter.First(x => x.Key != this).Key, link);
+        SendGraphTo(link.ListRouter.First(x => x != this), link);
       }
       //}
     }
@@ -116,7 +116,7 @@ namespace TP2
     /// <summary>
     /// Démarre un thread pour listen sur le port du router.
     /// </summary>
-    public void start()
+    public void StartListening()
     {
       TcpListener server = null;
 

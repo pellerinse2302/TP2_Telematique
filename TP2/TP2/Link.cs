@@ -16,14 +16,11 @@ namespace TP2
     /// <summary>
     /// Permet d'avoir les routeurs sous forme de liste
     /// </summary>
-    public Dictionary<Router, Router> ListRouter
+    public List<Router> ListRouter
     {
       get
       {
-        return new Dictionary<Router, Router>()
-        {
-          {R1, R2}
-        };
+        return new List<Router>{R1, R2};
       }
     }
     #endregion

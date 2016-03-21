@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TP2
@@ -52,7 +53,7 @@ namespace TP2
       //{
       foreach (Link link in NeighboursLink)
       {
-        SendGraphTo(link.ListRouter.First(x => x.Key != this).Key, link);
+        SendGraphTo(link.ListRouter.First(x => x != this), link);
       }
       //}
     }
@@ -69,7 +70,7 @@ namespace TP2
       //Dans la réception du graph il faut comparer les graph et si ils sont identiques
       //on met le graph.isupdated a true, sinon à false
       //Lorsque tous les graphs seront updated, ça veut dire que tous les routers ont le mm graph
-      string str = "Hello world!";
+      string str = "Poke";
       try
       {
         //var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -116,36 +117,68 @@ namespace TP2
     /// <summary>
     /// Démarre un thread pour listen sur le port du router.
     /// </summary>
-    public void start()
+    public void StartListening()
     {
-      TcpListener server = null;
+      //TcpListener server = null;
 
+      //try
+      //{
+      //  server = new TcpListener(this.Gateway, this.portNumber);
+      //  server.Server.ReceiveTimeout = 10000;
+      //  server.Start();
+
+      //  while (!RouterGraph.IsUpdated)
+      //  {
+      //    TcpClient client = server.AcceptTcpClient();
+      //  }
+      //}
+      //catch (SocketException e)
+      //{
+      //  //Devrait se rendre ici s'il timeout.
+      //  Console.WriteLine("Le {0} est à jour ", this.RouterName);
+
+      //  while (true)
+      //  {
+      //    server.Server.ReceiveTimeout = 0;
+      //    TcpClient client = server.AcceptTcpClient();
+      //  }
+      //}
+      //finally
+      //{
+      //  // Stop listening for new clients.
+      //  server.Stop();
+      //}
+
+      // Create an instance of the TcpListener class.
+      TcpListener tcpListener = null;
       try
       {
-        server = new TcpListener(this.Gateway, this.portNumber);
-        server.Server.ReceiveTimeout = 10000;
-        server.Start();
-
-        while (!RouterGraph.IsUpdated)
-        {
-          TcpClient client = server.AcceptTcpClient();
-        }
+        // Set the listener on the local IP address 
+        // and specify the port.
+        tcpListener = new TcpListener(this.Gateway, this.portNumber);
+        tcpListener.Start();
+        Console.WriteLine("Waiting for a connection...");
       }
-      catch (SocketException e)
+      catch (Exception e)
       {
-        //Devrait se rendre ici s'il timeout.
-        Console.WriteLine("Le {0} est à jour ", this.RouterName);
-
-        while (true)
-        {
-          server.Server.ReceiveTimeout = 0;
-          TcpClient client = server.AcceptTcpClient();
-        }
+        Console.WriteLine("Error: " + e.ToString());
       }
-      finally
+      while (true)
       {
-        // Stop listening for new clients.
-        server.Stop();
+        // Always use a Sleep call in a while(true) loop 
+        // to avoid locking up your CPU.
+        Thread.Sleep(10);
+        // Create a TCP socket. 
+        // If you ran this server on the desktop, you could use 
+        // Socket socket = tcpListener.AcceptSocket() 
+        // for greater flexibility.
+        TcpClient tcpClient = tcpListener.AcceptTcpClient();
+        // Read the data stream from the client. 
+        byte[] bytes = new byte[256];
+        NetworkStream stream = tcpClient.GetStream();
+        stream.Read(bytes, 0, bytes.Length);
+        SocketHelper helper = new SocketHelper();
+        helper.processMsg(tcpClient, stream, bytes);
       }
     }
     #endregion

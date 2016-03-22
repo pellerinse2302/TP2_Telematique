@@ -36,13 +36,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DVAlgorithm.cs" />
-    <Compile Include="Graph.cs" />
+    <Compile Include="RoutingTable.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="LSAlgorithm.cs" />
     <Compile Include="ModeEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Router.cs" />
-    <Compile Include="RoutingTable.cs" />
     <Compile Include="SocketHelper.cs" />
   </ItemGroup>
   <ItemGroup>

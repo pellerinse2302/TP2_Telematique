@@ -39,6 +39,15 @@ namespace TP2
       Router RouterE = new Router("RouterE", 50005);
       Router RouterF = new Router("RouterF", 50006);
 
+      List<Router> listRouter = new List<Router>();
+      listRouter.Add(RouterA);
+      listRouter.Add(RouterB);
+      listRouter.Add(RouterC);
+      listRouter.Add(RouterD);
+      listRouter.Add(RouterE);
+      listRouter.Add(RouterF);
+      Router.listRouter = listRouter;
+
       Link linkAB = new Link(RouterA, RouterB, 5);
       Link linkAD = new Link(RouterA, RouterD, 45);
       Link linkBC = new Link(RouterB, RouterC, 70);
@@ -69,12 +78,14 @@ namespace TP2
       ThreadRouterE.Start();
       ThreadRouterF.Start();
 
-      RouterA.UpdateNeighborhood();
+
+
+      /*RouterA.UpdateNeighborhood();
       RouterB.UpdateNeighborhood();
       RouterC.UpdateNeighborhood();
       RouterD.UpdateNeighborhood();
       RouterE.UpdateNeighborhood();
-      RouterF.UpdateNeighborhood();
+      RouterF.UpdateNeighborhood();*/
 
       Console.ReadLine();
     }

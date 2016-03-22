@@ -16,9 +16,9 @@ namespace TP2
     /// Mode du router (LS/DV)
     /// </summary>
     public static ModeEnum RouterMode { get; set; }
+    public static List<Router> listRouter { get; set; }
     public List<Link> NeighboursLink { get; set; }
-    public RoutingTable RoutTable { get; set; }
-    public Graph RouterGraph { get; set; }
+    public RoutingTable RoutingTable { get; set; }
     public IPAddress Gateway { get; set; }
     public string RouterName { get; set; }
     public int portNumber { get; set; }
@@ -27,7 +27,7 @@ namespace TP2
     #region Constructeur
     public Router(string name = null, int port = 0)
     {
-      this.RouterGraph = new Graph();
+      this.RoutingTable = new RoutingTable();
       this.Gateway = IPAddress.Parse("127.0.0.1");
       this.RouterName = name;
       this.portNumber = port;
@@ -44,6 +44,30 @@ namespace TP2
     {
       return NeighboursLink.First(x => x == link).ListRouter.First(x => x.Key == this).Value;
     }*/
+
+
+    public void initRoutingTable()
+    {
+      if (Router.RouterMode == ModeEnum.LS)
+      {
+        foreach (Router r in listRouter)
+        {
+          Link link = new Link(this, r, 1000000);
+          foreach (Link l in this.NeighboursLink)
+          {
+            if (l.ListRouter.First(x => x != this) == r)
+            {
+              link = l;
+            }
+          }
+          RoutingTable.graph.Add(link);
+        }
+      }
+      else
+      {
+        //  DV
+      }
+    }
     /// <summary>
     /// Permet d'envoyer son graph aux routeurs voisins
     /// </summary>
